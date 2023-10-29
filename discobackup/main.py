@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-v', '--version', action='version', version='discobackup ' + discobackup.__version__)
 
 def token_as_string() -> str:
-    with open("discobackup/bot_token.txt") as token:
+    with open("bot_token.txt") as token:
         token_str = token.read()
     
     return token_str
