@@ -10,7 +10,6 @@ pip install -r requirements.txt  # For required dependencies
 
 # Run
 
-
 ```
 python discobackup.py  # To run the application
 ```
