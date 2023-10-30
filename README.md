@@ -1,8 +1,8 @@
-## DiscoBackup
+# DiscoBackup
 
 Discord bot for backing up and restoring text channels
 
-# Setup
+## Setup
 
 Put your Discord bot token in a text file with any name in an easy-to-access location (project root directory is most convenient).
 
@@ -12,7 +12,7 @@ Now install the required dependencies to run the project.
 pip install -r requirements.txt  # For required dependencies
 ```
 
-# Run
+## Run
 
 Start up the Discord bot.
 
