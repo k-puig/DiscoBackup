@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-v', '--version', action='version', version='discobackup ' + discobackup.__version__)
 parser.add_argument('filename')
 
-def main(argv=None) -> None:
+def main(argv=None) -> int:
     if argv is None:
         argv = sys.argv
     
