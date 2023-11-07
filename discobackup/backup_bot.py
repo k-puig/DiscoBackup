@@ -2,6 +2,7 @@ import discord
 import time
 
 class BackupBot(discord.Bot):
+    # Yields messages from present to past
     async def channel_messages_iterable(self, channel:discord.TextChannel, min_delay_ms:int):
         if not (type(min_delay_ms) is int):
             print("min_delay_ms is " + str(type(min_delay_ms)))
