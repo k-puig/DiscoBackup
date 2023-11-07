@@ -1,6 +1,6 @@
 import discord
 
-class BackupBot(discord.Client):
+class BackupBot(discord.Bot):
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
     
