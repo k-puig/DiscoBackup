@@ -18,6 +18,9 @@ def main(argv=None) -> int:
     
     args = parser.parse_args(argv[1:])
     
+    # Show discord library version
+    print("Using " + discord.__title__ + " version " + discord.__version__)
+    
     # Define intents
     intents = discord.Intents.default()
     intents.message_content = True
