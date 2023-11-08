@@ -45,5 +45,6 @@ class BackupBot(discord.Bot):
                     result += iter_message.content
                     result += "\n"
                     i += 1
-            await message.reply(result)
+            if i > 0:
+                await message.reply(result)
     
