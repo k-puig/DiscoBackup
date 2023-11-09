@@ -37,20 +37,43 @@ class BackupBot(discord.Bot):
             webhook = await self.create_webhook_if_not_exists(channel)
         return self.DupeChannel(channel, webhook)
     
-    # Yields messages from present to past
+    # TODO delete this function
+    # Used to test recreating messages with webhooks that mimic the original author
+    async def duplicate_entire_textchannel(self, channel:discord.TextChannel, new_name:str):
+        dupe = await self.duplicate_textchannel(channel, new_name, True)
+        newchannel = dupe.channel
+        webhook = dupe.webhook
+        
+        async for message in self.channel_messages(channel, 50):
+            attachments_as_files:list[discord.File] = []
+            for attachment in message.attachments:
+                attachments_as_files.append(await attachment.to_file())
+            await webhook.send(
+                content=message.content, 
+                avatar_url=message.author.avatar.url,
+                username=message.author.name,
+                embeds=message.embeds,
+                files=attachments_as_files
+            )
+        
+        await self.delete_webhooks_if_exist(newchannel)
+    
+    # Yields messages from past to present
     async def channel_messages(self, channel:discord.TextChannel, min_delay_ms:int):
+        # TODO this if may be redundant
         if not (type(min_delay_ms) is int):
             print("min_delay_ms is " + str(type(min_delay_ms)))
             yield ()
             return
         
+        # TODO this if may be redundant
         if not (type(channel) is discord.TextChannel):
             print("channel is " + str(type(channel)))
             yield ()
             return
 
         time1 = time.time() * 1000
-        async for message in channel.history(limit=None):
+        async for message in channel.history(limit=None, oldest_first=True):
             time2 = time.time() * 1000
             
             time_elapsed = time2 - time1
@@ -68,7 +91,10 @@ class BackupBot(discord.Bot):
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
     
-    async def on_message(self, message):
+    async def on_message(self, message:discord.Message):
+        if message.author.id == self.user.id or message.webhook_id:
+            return
+
         if message.content == 'hello':
             await message.reply('world!')
         if message.content == 'iterate':
@@ -94,4 +120,6 @@ class BackupBot(discord.Bot):
             await self.duplicate_textchannel(message.channel, message.content[len('dupe '):])
         if message.content.startswith('dupehook '):
             await self.duplicate_textchannel(message.channel, message.content[len('dupehook '):], True)
+        if message.content.startswith('restore '):
+            await self.duplicate_entire_textchannel(message.channel, message.content[len('restore '):])
     
