@@ -53,13 +53,23 @@ class BackupBot(discord.Bot):
             attachments_as_files:list[discord.File] = []
             for attachment in message.attachments:
                 attachments_as_files.append(await attachment.to_file())
-            await webhook.send(
-                content=message.content, 
-                avatar_url=message.author.avatar.url,
-                username=message.author.name,
-                embeds=message.embeds,
-                files=attachments_as_files
-            )
+            try:
+                await webhook.send(
+                    content=message.content, 
+                    avatar_url=message.author.avatar.url,
+                    username=message.author.name,
+                    embeds=message.embeds,
+                    files=attachments_as_files
+                )
+            except AttributeError:
+                await webhook.send(
+                    content=message.content,
+                    username=message.author.name,
+                    embeds=message.embeds,
+                    files=attachments_as_files
+                )
+            except:
+                pass
         
         await self.delete_webhooks_if_exist(newchannel)
     
