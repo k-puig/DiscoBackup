@@ -77,7 +77,7 @@ class BackupBot(discord.Bot):
             
             time_elapsed = time2 - time1
             if time_elapsed < min_delay_ms and min_delay_ms - time_elapsed > 0:
-                asyncio.sleep((min_delay_ms - time_elapsed) / 1000)
+                await asyncio.sleep((min_delay_ms - time_elapsed) / 1000)
             
             yield message
             
