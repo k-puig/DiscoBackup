@@ -1,5 +1,10 @@
-import discord
+import asyncio
 import time
+import warnings
+
+import discord
+
+from typing import Generator
 
 class BackupBot(discord.Bot):
     class DupeChannel:
@@ -59,16 +64,10 @@ class BackupBot(discord.Bot):
         await self.delete_webhooks_if_exist(newchannel)
     
     # Yields messages from past to present
-    async def channel_messages(self, channel:discord.TextChannel, min_delay_ms:int):
-        # TODO this if may be redundant
-        if not (type(min_delay_ms) is int):
-            print("min_delay_ms is " + str(type(min_delay_ms)))
-            yield ()
-            return
-        
-        # TODO this if may be redundant
-        if not (type(channel) is discord.TextChannel):
-            print("channel is " + str(type(channel)))
+    async def channel_messages(self, channel:discord.TextChannel, min_delay_ms:int) -> Generator[discord.Message, None, None]:
+        if not isinstance(channel, discord.TextChannel):
+            warnings.warn("Parameter channel is type " + str(type(channel) + ", expected discord.TextChannel"))
+            warnings.warn("Call to method BackupBot.channel_messages will return a blank tuple")
             yield ()
             return
 
@@ -78,7 +77,7 @@ class BackupBot(discord.Bot):
             
             time_elapsed = time2 - time1
             if time_elapsed < min_delay_ms and min_delay_ms - time_elapsed > 0:
-                time.sleep((min_delay_ms - time_elapsed) / 1000)
+                asyncio.sleep((min_delay_ms - time_elapsed) / 1000)
             
             yield message
             
